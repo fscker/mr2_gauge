@@ -11,41 +11,40 @@ DIO = 17
 CLK = 27
 STB = 22
 
-RC = 0
-
 class Car:
     rpm = 0.0
     boost = 0
 
 display = TM1638.TM1638(DIO, CLK, STB)
-display.enable()
+display.enable(1)
 car = Car()
 
 #connection = obd.OBD() # auto-connects to USB or RF port
 
-#def display():
-#    boost_gauge()
+def display_print(msg): 
+    clear()
+    msg = msg[0:8]
+    for i,v in enumerate(msg):
+        if v == ' ':
+          display.send_char(i,0)
+        else:
+          display.send_char(i,display.FONT[v])
 
 def boost_gauge():
-   out = "RPM : " + str(car.rpm)
-   display.set_text(str(out))
+    display_print("psi %i" % (car.boost) )
 
-def boost_gauge():
-    out = "psi" + str(car.boost)
-#    out = str[0:8]
-    display.set_text(str(out))
+def clear():
+   for i in range(0,7):
+     display.send_char(i,0)
 
 def main_menu():
+    clear()
     while True:
         car.rpm = random.randint(2000, 4000)
         car.boost = random.randint(0, 20)
         keys = display.get_buttons()
-            
-        if keys == 1:
-		boost_gauge()
-        if keys == 2:
-		display.set_text(str("12345678"))
-  
-	time.sleep(0.1)
+        boost_gauge()
+    
+	time.sleep(2)
 
-boost_gauge()
+main_menu()
