@@ -27,11 +27,25 @@ def boost_gauge():
 		#intake_pressure = obd.commands.INTAKE_PRESSURE
 		#intake_pressure_response = connection.query(intake_pressure)
 		boost =  (random.randint(30, 200) - 100) * .145
+		boost_str = str(boost)
 		boost_int = int(boost)
 		#display.set_text(8-len(boost)+i, int(text[i]), i==dotpos)
-		print str(rpm) + "  " + str(boost_int).replace("-","")
+		#print str(rpm) + "  " + str(boost_int).replace("-","")
 		#display.set_text(str(rpm) + "  " + str(boost_int).replace("-",""))
-		display.set_text(str(rpm_count) + "  " + str(boost_count))
+		#display.send_char(0, 0b01110011)
+		#display.send_char(1, 0b01101101)
+		#display.send_char(2, 0b00000110)
+		#display.set_text(str(boost_count)[2:2])
+		for ch in boost_str:
+			if boost_str < 10:
+				#display.set_digit(2, int(ch[0]))
+				print int(ch[0])
+			if boost_str > 10:
+				#display.set_digit(2, int(ch[0]))
+				#display.set_digit(3, int(ch[1]))
+				print int(ch[0])
+				print int(ch[1])
+		#display.set_digit(2, int(boost_count))
 		if rpm_count < 1000:
 			display.set_led(0, 1)
 			display.set_led(1, 0)
@@ -95,18 +109,14 @@ def boost_gauge():
 			display.set_led(5, 2)
 			display.set_led(6, 2)
 			display.set_led(7, 2)
-		keys = display.get_buttons()
-		if keys == 128:
-			main_menu()
 
 def main_menu():
 	while True:
 	        keys = display.get_buttons()
-	        print keys
 	        if keys == 1:
 	                boost_gauge()
 	        if keys == 2:
 	                display.set_text(str("12345678"))
 	        time.sleep(0.1)
 
-main_menu()
+boost_gauge()
